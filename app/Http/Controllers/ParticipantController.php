@@ -1,0 +1,131 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\participants;
+use Image;
+use DB;
+
+class ParticipantController extends Controller
+{
+
+    public function liste(){
+      $liste = DB::table('participants')->get();
+
+    return view('pages.participants.liste',compact('liste'));
+  }
+    public function creerMembre(){
+      return view('pages.participants.creer');
+    }
+
+    public function valider(Request $request){
+      $validateData = $request->validate([
+      'identification'=>'unique:participants|max:255',
+      'contact'=>'unique:participants|max:10'
+    ]);
+
+    $participant = new participants();
+    $participant->nom = $request->nom;
+    $participant->prenom = $request->prenom;
+    $participant->surnom = $request->surnom;
+    $participant->naissance = $request->naissance;
+    $participant->adresse = $request->adresse;
+    $participant->identification = $request->identification;
+    $participant->contact = $request->contact;
+    $participant->email = $request->email;
+    $participant->situationmatri = $request->situationmatri;
+    $participant->pere = $request->pere;
+
+    $photo = $request->photo;
+    if ($photo){
+      $photo_name = hexdec(uniqid()).'.'.$photo->getClientOriginalExtension();
+     Image::make($photo)->resize(300,300)->save('public/media/photo/'.$photo_name);
+     $participant->photo = 'public/media/photo/'.$photo_name;
+    }
+    $participant->save();
+    $notification=array(
+        'message'=>'Membre ajouté avec succès!',
+        'alert-type'=>'success'
+         );
+       return Redirect()->route('listeMembre')->with($notification);
+    }
+
+    public function supprimer($id){
+    $membre = DB::table('participants')->where('id',$id)->first();
+   $photo = $membre->photo;
+   $supprime = DB::table('participants')->where('id',$id)->delete();
+   if($supprime){
+     unlink($photo);
+   }
+   $notification=array(
+      'message'=>'Membre supprimé avec succès!',
+      'alert-type'=>'success'
+       );
+     return Redirect()->back()->with($notification);
+
+    }
+
+    public function modifier($id){
+      $membre = DB::table('participants')->where('id',$id)->first();
+      return view('pages.participants.modifier',compact('membre'));
+    }
+
+    public function changerMembre(Request $request, $id){
+
+    $participant = array();
+    $participant['nom'] = $request->nom;
+    $participant['prenom'] = $request->prenom;
+    $participant['surnom']= $request->surnom;
+    $participant['naissance'] = $request->naissance;
+    $participant['adresse'] = $request->adresse;
+    $participant['identification']= $request->identification;
+    $participant['contact'] = $request->contact;
+    $participant['email'] = $request->email;
+    $participant['situationmatri'] = $request->situationmatri;
+    $participant['pere'] = $request->pere;
+    $update = DB::table('participants')->where('id',$id)->update($participant);
+    if($update){
+      $notification=array(
+          'message'=>'Mise à jour éffectuée avec succès!',
+          'alert-type'=>'success'
+           );
+         return Redirect()->route('listeMembre')->with($notification);
+    }else{
+      $notification=array(
+        'message'=>'Mise à jour non éffectuée!',
+        'alert-type'=>'warning'
+         );
+       return Redirect()->route('listeMembre')->with($notification);
+    }
+
+    }
+
+    public function changerPhotoMembre(Request $request, $id){
+      $ancienne_photo = $request->old;
+      $data = array();
+      $n_photo = $request->file('photo');
+
+      if($n_photo){
+        unlink($ancienne_photo);
+      }
+      $n_photo_name = hexdec(uniqid()).'.'.$n_photo->getClientOriginalExtension();
+     Image::make($n_photo)->resize(300,300)->save('public/media/photo/'.$n_photo_name);
+     $data['photo'] = 'public/media/photo/'.$n_photo_name;
+     $updatephoto = DB::table('participants')->where('id',$id)->update($data);
+
+     if($updatephoto){
+       $notification=array(
+           'message'=>'Photo mise à jour avec succès!',
+           'alert-type'=>'success'
+            );
+          return Redirect()->route('listeMembre')->with($notification);
+     }else{
+       $notification=array(
+         'message'=>'Mise à jour non éffectuée!',
+         'alert-type'=>'warning'
+          );
+        return Redirect()->route('listeMembre')->with($notification);
+     }
+    }
+}
