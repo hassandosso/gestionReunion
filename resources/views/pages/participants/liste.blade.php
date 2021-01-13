@@ -37,7 +37,7 @@
                   <td>{{$row->naissance}}</td>
                   <td>{{$row->pere}}</td>
                   <td>
-                    <a href="{{URL::to('detail/membre/'.$row->id)}}" class="btn btn-warning btn-sm" title="Détails"><i class="fa fa-eye"></i></a>
+                    <a href="{{URL::to('detail/membre/'.$row->identification)}}" class="btn btn-warning btn-sm" title="Détails"><i class="fa fa-eye"></i></a>
                     <a href="{{URL::to('modifier/membre/'.$row->id)}}" class="btn btn-info btn-sm" title="Modifier"><i class="fa fa-edit"></i></a>
                     <a href="{{URL::to('supprimer/membre/'.$row->id)}}" class="btn btn-danger btn-sm" id="delete" title="Supprimer"><i class="fa fa-trash"></i></a>
                   </td>

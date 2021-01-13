@@ -107,7 +107,10 @@ class ParticipantController extends Controller
       $n_photo = $request->file('photo');
 
       if($n_photo){
-        unlink($ancienne_photo);
+        if($ancienne_photo){
+          unlink($ancienne_photo);
+        }
+
       }
       $n_photo_name = hexdec(uniqid()).'.'.$n_photo->getClientOriginalExtension();
      Image::make($n_photo)->resize(300,300)->save('public/media/photo/'.$n_photo_name);
@@ -127,5 +130,38 @@ class ParticipantController extends Controller
           );
         return Redirect()->route('listeMembre')->with($notification);
      }
+    }
+
+    public function details($id){
+      $membre = DB::table('participants')->where('identification',$id)->first();
+      $reunions  = DB::table('reunions')->get();
+      $nbParticipation=0;
+      $cotisee = 0;
+      $detailReunion = array();
+      $payer = array();
+      $date = array();
+      foreach($reunions as $key=>$row){
+        $arrId = explode(',', $row->identification);
+        $arrPres = explode(',', $row->presence);
+        $arrCot = explode(',', $row->cotisation);
+        array_unshift($arrId,10000);
+        array_unshift($arrPres,1000);
+        array_unshift($arrCot,0);
+        $index = array_search($id,$arrId,true);
+        if($index){
+          if($arrPres[$index]=='present'){
+            $nbParticipation= $nbParticipation + 1;
+          }
+          $cotisee = $cotisee + intval($arrCot[$index]);
+          array_push($detailReunion,$arrPres[$index]);
+          array_push($payer,$arrCot[$index]);
+          array_push($date,$row->date);
+        }
+
+      }
+      $countReunion = $key+1;
+
+      return view('pages.participants.details',compact('membre','nbParticipation','cotisee','countReunion','detailReunion',
+                                                        'payer','date'));
     }
 }

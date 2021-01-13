@@ -14,21 +14,30 @@
       <div class="col-sm-6 col-xl-3">
         <div class="card pd-20 bg-primary">
           <div class="d-flex justify-content-between align-items-center mg-b-10">
-            <h6 class="tx-11 tx-uppercase mg-b-0 tx-spacing-1 tx-white">Cotisation normale</h6>
+            <h6 class="tx-11 tx-uppercase mg-b-0 tx-spacing-1 tx-white">Cotisations Mensuelles</h6>
             <a href="" class="tx-white-8 hover-white"><i class="icon ion-android-more-horizontal"></i></a>
           </div><!-- card-header -->
+          <?php
+            $cotisation = DB::table('reunions')->sum('montant_obtenu');
+            $first = DB::table('reunions')->orderby('montant_obtenu','DESC')->first();
+            $montants = DB::table('reunions')->select('montant_obtenu')->get();
+            $mt = array();
+            foreach ($montants as $row){
+              array_push($mt,$row->montant_obtenu);
+            }
+          ?>
           <div class="d-flex align-items-center justify-content-between">
-            <span class="sparkline2">5,3,9,6,5,9,7,3,5,2</span>
-            <h3 class="mg-b-0 tx-white tx-lato tx-bold">$850</h3>
+            <span class="sparkline2">{{implode(',',$mt)}}</span>
+            <h3 class="mg-b-0 tx-white tx-lato tx-bold">{{$cotisation}}f</h3>
           </div><!-- card-body -->
           <div class="d-flex align-items-center justify-content-between mg-t-15 bd-t bd-white-2 pd-t-10">
             <div>
-              <span class="tx-11 tx-white-6">Gross Sales</span>
-              <h6 class="tx-white mg-b-0">$2,210</h6>
+              <span class="tx-11 tx-white-6">Plus gros montant</span>
+              <h6 class="tx-white mg-b-0">{{$first->montant_obtenu}}f</h6>
             </div>
             <div>
-              <span class="tx-11 tx-white-6">Tax Return</span>
-              <h6 class="tx-white mg-b-0">$320</h6>
+              <span class="tx-11 tx-white-6">Date</span>
+              <h6 class="tx-white mg-b-0">{{$first->date}}</h6>
             </div>
           </div><!-- -->
         </div><!-- card -->

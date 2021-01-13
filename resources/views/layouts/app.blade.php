@@ -27,6 +27,7 @@
     <!-- Meta -->
     <meta name="description" content="Premium Quality and Responsive UI for Dashboard.">
     <meta name="author" content="ThemePixels">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <title>Gestion de Réunion</title>
     <!-- TAG INPUT CDN -->
@@ -55,7 +56,7 @@
   <div class="sl-logo"><a href=""><i class="icon ion-android-star-outline"></i>TANAN MOUELA</a></div>
   <div class="sl-sideleft">
     <div class="sl-sideleft-menu">
-      <a href="{{url('admin/home')}}" class="sl-menu-link active">
+      <a href="{{url('/')}}" class="sl-menu-link active">
         <div class="sl-menu-item">
           <i class="menu-item-icon icon ion-ios-home-outline tx-22"></i>
           <span class="menu-item-label">TABLEAU DE BORD</span>
@@ -80,8 +81,8 @@
         </div><!-- menu-item -->
       </a><!-- sl-menu-link -->
       <ul class="sl-menu-sub nav flex-column">
-        <li class="nav-item"><a href="" class="nav-link">Réunion du jour</a></li>
-        <li class="nav-item"><a href="" class="nav-link">Liste des Réunion</a></li>
+        <li class="nav-item"><a href="{{route('creer.reunion')}}" class="nav-link">Réunion du jour</a></li>
+        <li class="nav-item"><a href="{{route('liste.reunion')}}" class="nav-link">Liste des Réunion</a></li>
       </ul>
       <a href="#" class="sl-menu-link">
         <div class="sl-menu-item">
@@ -92,7 +93,7 @@
       </a><!-- sl-menu-link -->
       <ul class="sl-menu-sub nav flex-column">
         <li class="nav-item"><a href="" class="nav-link">Créer</a></li>
-        <li class="nav-item"><a href="" class="nav-link">Liste</a></li>
+        <li class="nav-item"><a href="{{route('liste.cotisation')}}" class="nav-link">Liste</a></li>
       </ul>
 
       <a href="#" class="sl-menu-link">
@@ -115,8 +116,8 @@
         </div><!-- menu-item -->
       </a><!-- sl-menu-link -->
       <ul class="sl-menu-sub nav flex-column">
-        <li class="nav-item"><a href="" class="nav-link">Créer</a></li>
-        <li class="nav-item"><a href="" class="nav-link">Liste</a></li>
+        <li class="nav-item"><a href="{{route('creer.pv')}}" class="nav-link">Créer</a></li>
+        <li class="nav-item"><a href="{{route('liste.pv')}}" class="nav-link">Liste</a></li>
       </ul>
 
       <a href="#" class="sl-menu-link">
@@ -127,7 +128,8 @@
         </div><!-- menu-item -->
       </a><!-- sl-menu-link -->
       <ul class="sl-menu-sub nav flex-column">
-        <li class="nav-item"><a href="" class="nav-link">Amande</a></li>
+        <li class="nav-item"><a href="" class="nav-link">Mise à jour Réunion</a></li>
+          <li class="nav-item"><a href="" class="nav-link">Amande</a></li>
       </ul>
     </div><!-- sl-sideleft-menu -->
 
@@ -176,6 +178,9 @@
     <script src="{{asset('public/backend/lib/datatables/jquery.dataTables.js')}}"></script>
     <script src="{{asset('public/backend/lib/datatables-responsive/dataTables.responsive.js')}}"></script>
     <script src="{{asset('public/backend/lib/select2/js/select2.min.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
       $(function(){
@@ -214,6 +219,7 @@
 
     <script src="{{asset('public/backend/lib/medium-editor/medium-editor.js')}}"></script>
    <script src="{{asset('public/backend/lib/summernote/summernote-bs4.min.js')}}"></script>
+
    <script>
      $(function(){
        'use strict';
@@ -294,5 +300,6 @@
             });
     </script>
 
+<!-- CREER REUNION SCRIPT -->
   </body>
 </html>
