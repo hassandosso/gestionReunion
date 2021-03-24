@@ -11,7 +11,7 @@
   <div class="sl-pagebody">
     <div class="card pd-20 pd-sm-40">
          <h6 class="card-body-title">Nouvel enregistrement
-           <a href="" class="btn btn-success btn-sm pull-right">Liste de PV</a>
+           <a href="{{route('liste.pv')}}" class="btn btn-success btn-sm pull-right">Liste de PV</a>
          </h6>
 <?php
   $reunions = DB::table('procesverbals')
@@ -45,7 +45,7 @@
 
            <div class="form-layout-footer">
              <button class="btn btn-info mg-r-5">Enregistrer</button>
-             <button class="btn btn-secondary">Annuler</button>
+             <a href="{{route('liste.pv')}}" class="btn btn-secondary">Annuler</a>
            </div><!-- form-layout-footer -->
          </div><!-- form-layout -->
        </form>
@@ -54,7 +54,7 @@
   </div><!-- sl-pagebody -->
 
   </div><!-- sl-mainpanel -->
-
+<script src="{{asset('public/backend/js/onlineJs/jquery-3.5.1.min.js')}}"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
    crossorigin="anonymous"></script>
 @endsection

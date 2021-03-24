@@ -17,8 +17,9 @@ class CreateCotisationsTable extends Migration
             $table->id();
             $table->string('nom');
             $table->integer('montant_fixe');
+            $table->date('date_ouverture')->nullable();
             $table->date('date_limite')->nullable();
-            $table->integer('status');
+            $table->integer('status')->nullable();
             $table->timestamps();
         });
     }

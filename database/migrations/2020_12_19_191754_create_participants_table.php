@@ -17,15 +17,17 @@ class CreateParticipantsTable extends Migration
             $table->id();
             $table->string('nom');
             $table->string('prenom');
-            $table->string('surnom');
-            $table->date('naissance');
-            $table->string('adresse');
+            $table->string('surnom')->nullable();
+            $table->date('naissance')->nullable();
+            $table->string('adresse')->nullable();
             $table->string('identification');
-            $table->integer('contact');
+            $table->string('contact')->nullable();
             $table->string('email')->nullable();
             $table->string('situationmatri');
             $table->string('pere')->nullable();
             $table->string('photo')->nullable();
+            $table->integer('decede')->nullable();
+            $table->date('date_deces')->nullable();
             $table->timestamps();
         });
     }

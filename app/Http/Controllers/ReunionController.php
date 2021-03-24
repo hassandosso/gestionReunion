@@ -9,6 +9,10 @@ use DB;
 
 class ReunionController extends Controller
 {
+  public function __construct()
+  {
+      $this->middleware('auth');
+  }
     public function reunionDuJour(){
       $reunion = DB::table('participants')->get();
 
@@ -27,11 +31,19 @@ class ReunionController extends Controller
     // SI LA REUNION N'A ENCORE ETE ENREGISTREE
     if(!$isExist){
     $data = array();
-    $data['identification'] = implode(",",$request->identification);
-    $data['presence'] = implode(",",$request->presence);
-    $data['cotisation'] = implode(",",$request->cotisation);
-    $data['nombre_present'] = $request->nombre_present;
-    $data['montant_obtenu'] = $request->montant_obtenu;
+    if ($request->identification ==NULL){
+      $data['identification'] = NULL;
+      $data['presence'] = NULL;
+      $data['cotisation'] = NULL;
+      $data['nombre_present'] = NULL;
+        $data['montant_obtenu'] = NULL;
+    }else{
+      $data['identification'] = implode(",",$request->identification);
+      $data['presence'] = implode(",",$request->presence);
+      $data['cotisation'] = implode(",",$request->cotisation);
+      $data['nombre_present'] = $request->nombre_present;
+      $data['montant_obtenu'] = $request->montant_obtenu;
+    }
     $data['date'] = $date;
       $save = DB::table('reunions')->insert($data);
       if($save){
@@ -39,7 +51,9 @@ class ReunionController extends Controller
       $dataid = array();
       $dataid['id_reunion'] = $reuId->id;
       DB::table('procesverbals')->insert($dataid);
-             return \Response::json(['success'=>'Liste validée avec succès']);
+
+      $new_id = DB::table('reunions')->where('date',$date)->first();
+             return \Response::json(['success'=>'Liste validée avec succès','id'=>$new_id->id]);
       }else{
            return \Response::json(['error'=>'impossible de valider la liste']);
       }
@@ -71,10 +85,10 @@ class ReunionController extends Controller
         array_push($exIds,$val);
         array_push($expres,$request->presence[$key]);
         array_push($exCot,$request->cotisation[$key]);
-        unset($exIds[0]);
-        unset($expres[0]);
-        unset($exCot[0]);
       }
+      unset($exIds[0]);
+      unset($expres[0]);
+      unset($exCot[0]);
       $newnombre_present = $exnombre_present+intval($request->nombre_present);
       $newmontant_obtenu = $exmontant_obtenu+intval($request->montant_obtenu);
       //End
@@ -87,8 +101,10 @@ class ReunionController extends Controller
       $data1['montant_obtenu'] = $newmontant_obtenu;
 
       $save1 = DB::table('reunions')->where('date',$date)->update($data1);
+
       if($save1){
-             return \Response::json(['success'=>'Liste mise à jour avec succès']);
+             $new_id = DB::table('reunions')->where('date',$date)->first();
+             return \Response::json(['success'=>'Liste mise à jour avec succès','id'=>$new_id->id]);
       }else{
            return \Response::json(['error'=>'impossible de valider la liste']);
       }
@@ -103,6 +119,22 @@ class ReunionController extends Controller
                     ->get();
 
     return view('pages.reunions.liste',compact('listeReunion'));
+  }
+
+  public function detailsReunion($id){
+    $d_reunion = DB::table('reunions')->where('id',$id)->first();
+    return view('pages.reunions.details',compact('d_reunion'));
+  }
+
+  public function supprimerReunion($id){
+    $delete = DB::table('reunions')->where('id',$id)->delete();
+    if($delete){
+      $notification = array(
+        'message'=>'Réunion supprimée avec succès',
+        'alert-type'=>'success'
+      );
+      return Redirect()->back()->with($notification);
+    }
   }
 
 }

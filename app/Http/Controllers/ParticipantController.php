@@ -9,6 +9,10 @@ use DB;
 
 class ParticipantController extends Controller
 {
+  public function __construct()
+  {
+      $this->middleware('auth');
+  }
 
     public function liste(){
       $liste = DB::table('participants')->get();
@@ -21,8 +25,7 @@ class ParticipantController extends Controller
 
     public function valider(Request $request){
       $validateData = $request->validate([
-      'identification'=>'unique:participants|max:255',
-      'contact'=>'unique:participants|max:10'
+      'identification'=>'unique:participants|max:255'
     ]);
 
     $participant = new participants();
@@ -76,14 +79,18 @@ class ParticipantController extends Controller
     $participant = array();
     $participant['nom'] = $request->nom;
     $participant['prenom'] = $request->prenom;
-    $participant['surnom']= $request->surnom;
+    $participant['surnom'] = $request->surnom;
     $participant['naissance'] = $request->naissance;
     $participant['adresse'] = $request->adresse;
-    $participant['identification']= $request->identification;
+    $participant['identification'] = $request->identification;
     $participant['contact'] = $request->contact;
     $participant['email'] = $request->email;
     $participant['situationmatri'] = $request->situationmatri;
     $participant['pere'] = $request->pere;
+    if ($request->decede == 1){
+      $participant['decede'] = $request->decede;
+      $participant['date_deces'] = $request->date_deces;
+    }
     $update = DB::table('participants')->where('id',$id)->update($participant);
     if($update){
       $notification=array(
@@ -133,13 +140,14 @@ class ParticipantController extends Controller
     }
 
     public function details($id){
+      // COTISATION REUNION
       $membre = DB::table('participants')->where('identification',$id)->first();
       $reunions  = DB::table('reunions')->get();
       $nbParticipation=0;
       $cotisee = 0;
-      $detailReunion = array();
       $payer = array();
       $date = array();
+      $countReunion = 0;
       foreach($reunions as $key=>$row){
         $arrId = explode(',', $row->identification);
         $arrPres = explode(',', $row->presence);
@@ -153,15 +161,57 @@ class ParticipantController extends Controller
             $nbParticipation= $nbParticipation + 1;
           }
           $cotisee = $cotisee + intval($arrCot[$index]);
-          array_push($detailReunion,$arrPres[$index]);
           array_push($payer,$arrCot[$index]);
-          array_push($date,$row->date);
+          array_push($date,explode('-',$row->date)[0]);
         }
-
+        $countReunion++;
       }
-      $countReunion = $key+1;
+      $detailReunion = array_unique($date);
+
+      //COTISATION EXCEPTIONNELLES
+      $id_p= DB::table('participants')->select('participants.id')->where('identification',$id)->first();
+      $paiement_det = DB::table('paiement_cotisations')
+                      ->join('cotisations','paiement_cotisations.id_cotisation','cotisations.id')
+                      ->select('paiement_cotisations.*','cotisations.nom','cotisations.montant_fixe','cotisations.status')
+                      ->orderBy('dates','ASC')
+                      ->get();
+        $cotisations = array();
+        $active = array();
+        $paiement = array();
+        foreach ($paiement_det as $no => $paies){
+          $ids = explode(',', $paies->id_participant);
+          array_unshift($ids,0);
+          $index = array_search($id_p->id,$ids);
+          if ($index){
+            $p = explode(',', $paies->paiement);
+            array_unshift($p,0);
+            if(!in_array($paies->nom,$cotisations)){
+              array_push($cotisations,$paies->nom);
+              array_push($paiement,$p[$index]);
+              array_push($active,$paies->status);
+            }else{
+              $index2 = array_search($paies->nom,$cotisations);
+              $el = $paiement[$index2];
+              $el = intval($el)+intval($p[$index]);
+              $paiement[$index2] = $el;
+            }
+          }else{
+            if (!in_array($paies->nom,$cotisations)){
+              array_push($cotisations,$paies->nom);
+              array_push($paiement,0);
+              array_push($active,$paies->status);
+            }
+          }
+        }
+      // MISE A JOUR COTISATION REUNION
+      $maj = DB::table('mise_ajours')->where('id_participant',$id_p->id)->get();
+      foreach ($maj as $m){
+        $cotisee = $cotisee + $m->montant;
+      }
+
+
 
       return view('pages.participants.details',compact('membre','nbParticipation','cotisee','countReunion','detailReunion',
-                                                        'payer','date'));
+                                                        'payer','date','maj','cotisations','paiement','active'));
     }
 }

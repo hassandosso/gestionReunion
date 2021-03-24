@@ -46,15 +46,15 @@
           </div>
 
           <div class="form-group col-lg-6">
-            <label for="naissance">Date de naissance<span class="tx-danger">*</span></label>
-            <input type="date" class="form-control" id="naissance" name="naissance" value="{{$membre->naissance}}" required>
+            <label for="naissance">Date de naissance</label>
+            <input type="date" class="form-control" id="naissance" name="naissance" value="{{$membre->naissance}}">
           </div>
     </div>
 
     <div class="row">
         <div class="form-group col-lg-6">
-          <label for="adresse">Adresse<span class="tx-danger">*</span></label>
-          <input type="text" class="form-control" id="adresse" name="adresse" value="{{$membre->adresse}}" required>
+          <label for="adresse">Adresse</label>
+          <input type="text" class="form-control" id="adresse" name="adresse" value="{{$membre->adresse}}">
         </div>
 
         <div class="form-group col-lg-6">
@@ -65,8 +65,8 @@
 
   <div class="row">
       <div class="form-group col-lg-6">
-        <label for="contact">Contact<span class="tx-danger">*</span></label>
-        <input type="text" class="form-control" id="contact" name="contact" value="{{$membre->contact}}" required>
+        <label for="contact">Contact</label>
+        <input type="text" class="form-control" id="contact" name="contact" value="{{$membre->contact}}"d>
       </div>
 
       <div class="form-group col-lg-6">
@@ -89,8 +89,22 @@
       <input type="text" class="form-control" id="pere" name="pere" value="{{$membre->pere}}">
     </div>
 </div>
+<div class="row">
+    <div class="form-group col-lg-6">
+      <label for="situation">Décédé?</label>
+      <select class="form-control" name="decede">
+        <option value="0">NON</option>
+        <option value="1">OUI</option>
+      </select>
+    </div>
+    <div class="form-group col-lg-6">
+      <label for="pere">Date décès</label>
+      <input type="date" class="form-control" id="pere" name="date_deces">
+    </div>
+</div>
 <div class="modal-footer">
   <button type="submit" class="btn btn-info pd-x-20">Enregistrer</button>
+  <a href="{{route('listeMembre')}}" class="btn btn-secondary pd-x-20">Annuler</a>
 </div>
 </form>
 <hr>
@@ -117,6 +131,7 @@
       </div><!-- modal-body -->
       <div class="modal-footer">
         <button type="submit" class="btn btn-info pd-x-20">Enregistrer</button>
+        <a href="{{route('listeMembre')}}" class="btn btn-secondary pd-x-20">Annuler</a>
       </div>
       </form>
     </div>

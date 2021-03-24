@@ -21,6 +21,7 @@
                   <th class="wd-15p">Nombre Présent</th>
                   <th class="wd-20p">Somme Cotisée</th>
                   <th class="wd-15p">Procès Verbal</th>
+                  <th class="wd-15p">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -36,6 +37,10 @@
                   <td>@if ($row->link !='')
                     <a href="{{asset($row->link)}}" target="_blank">PV reunion</a>
                   @endif</td>
+                  <td>
+                    <a href="{{URL::to('gestion/reunion/reuniondujour/details/'.$row->id)}}" class="btn btn-warning btn-sm" title="Détails"><i class="fa fa-eye"></i></a>
+                    <a href="{{URL::to('gestion/reunion/supprimer/reuniondujour/'.$row->id)}}" class="btn btn-danger btn-sm" id="delete" title="Supprimer"><i class="fa fa-trash"></i></a>
+                  </td>
                 </tr>
                 @endforeach
               </tbody>

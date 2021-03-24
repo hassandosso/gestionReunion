@@ -16,7 +16,7 @@ class CreateProcesverbalsTable extends Migration
         Schema::create('procesverbals', function (Blueprint $table) {
             $table->id();
             $table->integer('id_reunion');
-            $table->text('pv');
+            $table->text('pv')->nullable();
             $table->string('link')->nullable();
             $table->timestamps();
         });

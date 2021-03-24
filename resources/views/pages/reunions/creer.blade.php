@@ -20,10 +20,9 @@
             <table id="datatable1" class="table display responsive nowrap">
               <thead>
                 <tr>
-                  <th class="wd-15p">No</th>
-                  <th class="wd-15p">Identifiant</th>
-                  <th class="wd-15p">Nom et Prénoms</th>
-                  <th class="wd-20p">Surnom</th>
+                  <th class="wd-5p">No</th>
+                  <th class="wd-25p">Nom et Prénoms</th>
+                  <th class="wd-25p">Surnom / ID</th>
                   <th class="wd-15p">Présence</th>
                   <th class="wd-15p">Cotisation Du Jour</th>
                   <th class="wd-20p">Action</th>
@@ -34,23 +33,31 @@
                 @foreach ($reunion as $key=>$row)
                 <tr>
                   <td>{{$key+1}}</td>
-                  <td>{{$row->identification}}</td>
                   <td>{{$row->nom}} {{$row->prenom}}</td>
-                  <td>{{$row->surnom}}</td>
+                  <td>{{$row->surnom}} / {{$row->identification}}</td>
                   <td>
+                    @if ($row->decede == null)
                   <input type="radio" value="absent" name="{{$row->identification}}" id="abs" checked><label for="abs"> Absent</label>
                   <input type="radio" value="present" name="{{$row->identification}}" id="pre"><label for="pre"> Présent</label>
+                  @endif
                   </td>
-                  <td><input type="text" value="0" class="cotisation"></td>
                   <td>
+                    @if ($row->decede == null)
+                    <input type="text" value="0" class="cotisation"></td>
+                    @endif
+                  <td>
+                    @if ($row->decede == null)
                     <button class="btn btn-primary btn-sm valideMembre" data-id="{{$row->identification}}">Valider</button>
+                    @else
+                    <span class="badge badge-danger">DECEDE</span>
+                    @endif
                   </td>
                 </tr>
                 @endforeach
               </tbody>
             </table>
           </div><!-- table-wrapper -->
-          <button class="btn btn-primary btn-sm valideReunion" disabled style="float:right; width:150px;">Valider La Liste</button>
+          <button class="btn btn-primary btn-sm valideReunion" style="float:right; width:150px;">Valider La Liste</button>
         </div><!-- card -->
 
     </div><!-- sl-mainpanel -->
@@ -58,6 +65,7 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
      crossorigin="anonymous"></script>
+    <script src="{{asset('public/backend/js/onlineJs/jquery-3.5.1.min.js')}}"></script>
     <script type="text/javascript">
 
      $.ajaxSetup({
@@ -93,14 +101,13 @@
          $(this).removeClass('btn-warning');
          $(this).addClass('btn-primary');
        }
-$('.valideReunion').prop('disabled',false);
      });
 
      $('.valideReunion').on('click',function(){
     // Count presence
         var countPres = 0;
         $.each( allPres, function(key,value) {
-          if (value === 'present')
+          if (value == 'present')
             countPres = countPres+1;
         });
     //----End
@@ -141,7 +148,7 @@ $('.valideReunion').prop('disabled',false);
                      icon: 'success',
                      title: data.success
                    });
-                   location.reload();
+                   window.location.replace("http://localhost/laravel_6_course/gestionReunion/gestion/reunion/reuniondujour/details/"+data.id);
                  }else{
                    Toast.fire({
                      icon: 'error',

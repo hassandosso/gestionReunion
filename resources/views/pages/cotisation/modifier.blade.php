@@ -38,6 +38,10 @@
                    <input type="text" class="form-control" id="montant" name="montant_fixe" value="{{$cotisation->montant_fixe}}" require>
                  </div>
                  <div class="form-group">
+                   <label for="date_ouverture">Date d'ouverture</label>
+                   <input type="date" class="form-control" id="date_ouverture" name="date_ouverture" value="{{$cotisation->date_ouverture}}">
+                 </div>
+                 <div class="form-group">
                    <label for="date_limite">Date Limite</label>
                    <input type="date" class="form-control" id="date_limite" name="date_limite" value="{{$cotisation->date_limite}}">
                  </div>
@@ -45,7 +49,7 @@
            </div><!-- modal-body -->
            <div class="modal-footer">
              <button type="submit" class="btn btn-info pd-x-20">Valider</button>
-             <button type="reset" class="btn btn-secondary pd-x-20">Fermer</button>
+             <a href="{{route('liste.cotisation')}}" class="btn btn-secondary pd-x-20">Annuler</a>
            </form>
            </div>
          </div>

@@ -10,6 +10,11 @@ use Storage;
 
 class ProcesverbalController extends Controller
 {
+
+  public function __construct()
+  {
+      $this->middleware('auth');
+  }
     public function creerPV(){
 
       return view('pages.procesverbal.creer');

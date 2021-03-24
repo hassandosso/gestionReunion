@@ -20,7 +20,7 @@ class CreateReunionsTable extends Migration
             $table->text('cotisation');
             $table->integer('nombre_present');
             $table->integer('montant_obtenu');
-            $table->date('date');
+            $table->date('date')->nullable();
             $table->timestamps();
         });
     }

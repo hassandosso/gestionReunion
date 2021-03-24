@@ -46,15 +46,15 @@
           </div>
 
           <div class="form-group col-lg-6">
-            <label for="naissance">Date de naissance<span class="tx-danger">*</span></label>
-            <input type="date" class="form-control" id="naissance" name="naissance" required>
+            <label for="naissance">Date de naissance</label>
+            <input type="date" class="form-control" id="naissance" name="naissance">
           </div>
     </div>
 
     <div class="row">
         <div class="form-group col-lg-6">
-          <label for="adresse">Adresse<span class="tx-danger">*</span></label>
-          <input type="text" class="form-control" id="adresse" name="adresse" required>
+          <label for="adresse">Adresse</label>
+          <input type="text" class="form-control" id="adresse" name="adresse">
         </div>
 
         <div class="form-group col-lg-6">
@@ -65,8 +65,8 @@
 
   <div class="row">
       <div class="form-group col-lg-6">
-        <label for="contact">Contact<span class="tx-danger">*</span></label>
-        <input type="text" class="form-control" id="contact" name="contact" required>
+        <label for="contact">Contact</label>
+        <input type="text" class="form-control" id="contact" name="contact">
       </div>
 
       <div class="form-group col-lg-6">
@@ -104,6 +104,7 @@
       </div><!-- modal-body -->
       <div class="modal-footer">
         <button type="submit" class="btn btn-info pd-x-20">Valider</button>
+        <a href="{{route('listeMembre')}}" class="btn btn-secondary pd-x-20">Annuler</a>
       </div>
       </form>
     </div>
